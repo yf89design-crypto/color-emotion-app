@@ -1595,7 +1595,7 @@ body {
     gap: 0;
     padding: 4px;
     margin: 8px 12px;
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(226, 220, 210, 0.95);
     border: 2px solid rgba(0, 0, 0, 0.08);
     border-radius: 50px;
     overflow-x: auto;
@@ -1669,7 +1669,7 @@ body {
     overflow-y: auto;
     overflow-x: hidden;
     align-content: start;
-    background: #EDE8DF;
+    background: #E2DCD2;
 }
 
 .swiss-grid::-webkit-scrollbar {
@@ -2890,7 +2890,7 @@ body {
     display: flex;
     align-items: flex-end;
     gap: 6px;
-    background: rgba(255, 255, 255, 0.45);
+    background: rgba(226, 220, 210, 0.85);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(255, 255, 255, 0.5);
