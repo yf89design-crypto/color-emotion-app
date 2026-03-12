@@ -1,5 +1,5 @@
 // Service Worker for 彩绘心灵 PWA
-const CACHE_NAME = 'color-emotion-app-v7';
+const CACHE_NAME = 'color-emotion-app-v8';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
