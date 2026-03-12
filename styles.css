@@ -1669,6 +1669,7 @@ body {
     overflow-y: auto;
     overflow-x: hidden;
     align-content: start;
+    background: #EDE8DF;
 }
 
 .swiss-grid::-webkit-scrollbar {
@@ -1753,22 +1754,50 @@ body {
     background: var(--card-bg);
     border-radius: 16px;
     border: 1px solid var(--card-border);
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-    overflow: hidden;
+    box-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.06),
+        0 4px 8px rgba(0, 0, 0, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    overflow: visible;
     cursor: pointer;
-    transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    perspective: 800px;
+    transform-style: preserve-3d;
+    transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
     opacity: 0;
     animation: bentoReveal 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     animation-delay: calc(var(--reveal-i, 0) * 0.08s);
+    position: relative;
+}
+
+.swiss-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, transparent 50%, rgba(0, 0, 0, 0.05) 100%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
 }
 
 .swiss-card:hover {
-    transform: translateY(-4px) scale(1.02);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    transform: rotate3d(0.5, -1, 0, 8deg) translateY(-8px) scale(1.03);
+    box-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.08),
+        0 12px 24px rgba(0, 0, 0, 0.15),
+        0 24px 48px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+.swiss-card:hover::after {
+    opacity: 1;
 }
 
 .swiss-card:active {
-    transform: scale(0.98);
+    transform: rotate3d(0.3, -0.5, 0, 4deg) scale(0.97);
+    box-shadow:
+        0 1px 2px rgba(0, 0, 0, 0.1),
+        0 4px 8px rgba(0, 0, 0, 0.08);
 }
 
 .swiss-card-icon {
