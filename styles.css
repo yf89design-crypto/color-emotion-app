@@ -450,6 +450,10 @@ body {
     /* space for dock */
 }
 
+#page-home {
+    background: #D8D0C4;
+}
+
 /* ============================================================
    iPad Shell
    ============================================================ */
@@ -4289,6 +4293,23 @@ body {
 
     .splash-page {
         border-radius: 0;
+    }
+
+    .ipad-content-panel {
+        width: 100%;
+        background: #D8D0C4;
+    }
+
+    #page-home {
+        background: #D8D0C4;
+    }
+
+    .tab-bar {
+        background: rgba(216, 208, 196, 0.92);
+    }
+
+    .dash-topnav {
+        background: rgba(216, 208, 196, 0.95);
     }
 }
 
