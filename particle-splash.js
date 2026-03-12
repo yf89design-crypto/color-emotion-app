@@ -48,15 +48,21 @@
         const rect = canvas.getBoundingClientRect();
         mouse.x = e.clientX - rect.left; mouse.y = e.clientY - rect.top;
     });
+    // Touch: update mouse on both touchstart and touchmove for tablet interaction
+    canvas.addEventListener('touchstart', e => {
+        e.preventDefault();
+        const rect = canvas.getBoundingClientRect();
+        mouse.x = e.touches[0].clientX - rect.left; mouse.y = e.touches[0].clientY - rect.top;
+    }, { passive: false });
     canvas.addEventListener('touchmove', e => {
         const rect = canvas.getBoundingClientRect();
         mouse.x = e.touches[0].clientX - rect.left; mouse.y = e.touches[0].clientY - rect.top;
     }, { passive: true });
+    canvas.addEventListener('touchend', () => { mouse.x = -9999; mouse.y = -9999; });
     canvas.addEventListener('mouseleave', () => { mouse.x = -9999; mouse.y = -9999; });
 
     canvas.addEventListener('click', handleSplashClick);
     canvas.addEventListener('touchend', handleSplashClick);
-    canvas.addEventListener('touchstart', e => { e.preventDefault(); }, { passive: false });
 
     function handleSplashClick(e) {
         if (entering) return;
@@ -99,29 +105,31 @@
     // ==========================================
     // System fonts that work everywhere (including TWA WebView)
     const SAFE_FONT = '"Arial Black", "Helvetica Neue", Arial, sans-serif';
-    let fontRetryCount = 0;
 
     function buildMode1() {
         modeState.textParticles = []; modeState.bgParticles = [];
+        // Use a SMALL offscreen canvas for text sampling — avoids mobile memory limits
+        const SAMPLE_W = 400, SAMPLE_H = 200;
         const off = document.createElement('canvas');
         const octx = off.getContext('2d');
-        off.width = W; off.height = H;
-        const fontSize = Math.min(W / 8, 120) * 1.6;
-        // Use system font as primary — Outfit may not be available in TWA WebView
-        const fontStr = `900 ${fontSize}px ${SAFE_FONT}`;
-        octx.font = fontStr;
+        off.width = SAMPLE_W; off.height = SAMPLE_H;
+        const fontSize = 60;
+        octx.font = `900 ${fontSize}px ${SAFE_FONT}`;
         octx.textAlign = 'center'; octx.textBaseline = 'middle'; octx.fillStyle = '#fff';
         const totalH = fontSize + fontSize * 0.85;
-        const startY = (H - totalH) / 2 + fontSize / 2;
-        octx.fillText('ART &', W / 2, startY);
+        const startY = (SAMPLE_H - totalH) / 2 + fontSize / 2;
+        octx.fillText('ART &', SAMPLE_W / 2, startY);
         octx.font = `900 ${fontSize * 0.85}px ${SAFE_FONT}`;
-        octx.fillText('Design', W / 2, startY + fontSize * 0.85);
-        const data = octx.getImageData(0, 0, W, H).data;
-        for (let y = 0; y < H; y += 4) {
-            for (let x = 0; x < W; x += 4) {
-                if (data[(y * W + x) * 4 + 3] > 128) {
+        octx.fillText('Design', SAMPLE_W / 2, startY + fontSize * 0.85);
+        const data = octx.getImageData(0, 0, SAMPLE_W, SAMPLE_H).data;
+        // Scale factor from sample canvas to actual canvas
+        const scaleX = W / SAMPLE_W, scaleY = H / SAMPLE_H;
+        const step = 2; // sample every 2 pixels on the small canvas
+        for (let y = 0; y < SAMPLE_H; y += step) {
+            for (let x = 0; x < SAMPLE_W; x += step) {
+                if (data[(y * SAMPLE_W + x) * 4 + 3] > 128) {
                     modeState.textParticles.push({
-                        originX: x, originY: y,
+                        originX: x * scaleX, originY: y * scaleY,
                         x: W / 2 + (Math.random() - 0.5) * W, y: H / 2 + (Math.random() - 0.5) * H,
                         vx: 0, vy: 0, color: COLORS[Math.floor(Math.random() * COLORS.length)],
                         size: 2 + Math.random() * 2, friction: 0.85 + Math.random() * 0.1,
@@ -129,11 +137,6 @@
                     });
                 }
             }
-        }
-        // Retry if no text particles found (canvas text rendering failed)
-        if (modeState.textParticles.length === 0 && fontRetryCount < 3) {
-            fontRetryCount++;
-            setTimeout(() => { if (currentMode === 0) buildMode1(); }, 1000);
         }
         const count = Math.floor((W * H) / 6000);
         for (let i = 0; i < count; i++) {
@@ -173,24 +176,29 @@
     // ==========================================
     function buildMode2() {
         modeState.waveTime = 0; modeState.waveCols = 120;
+        // Use small offscreen canvas for text mask — avoids mobile memory limits
+        const SAMPLE_W = 400, SAMPLE_H = 200;
         const off = document.createElement('canvas');
         const octx = off.getContext('2d');
-        off.width = W; off.height = H;
-        const fontSize = Math.min(W / 7, 140) * 1.4;
-        octx.font = `900 ${fontSize}px "Outfit", sans-serif`;
+        off.width = SAMPLE_W; off.height = SAMPLE_H;
+        const fontSize = 60;
+        octx.font = `900 ${fontSize}px ${SAFE_FONT}`;
         octx.textAlign = 'center'; octx.textBaseline = 'middle'; octx.fillStyle = '#fff';
         const tH = fontSize + fontSize * 0.85;
-        const sY = (H - tH) / 2 + fontSize / 2;
-        octx.fillText('ART &', W / 2, sY);
-        octx.font = `900 ${fontSize * 0.85}px "Outfit", sans-serif`;
-        octx.fillText('Design', W / 2, sY + fontSize * 0.85);
-        modeState.textMask = octx.getImageData(0, 0, W, H).data;
+        const sY = (SAMPLE_H - tH) / 2 + fontSize / 2;
+        octx.fillText('ART &', SAMPLE_W / 2, sY);
+        octx.font = `900 ${fontSize * 0.85}px ${SAFE_FONT}`;
+        octx.fillText('Design', SAMPLE_W / 2, sY + fontSize * 0.85);
+        modeState.textMask = octx.getImageData(0, 0, SAMPLE_W, SAMPLE_H).data;
+        modeState.maskW = SAMPLE_W;
+        modeState.maskH = SAMPLE_H;
     }
 
     function drawMode2() {
         ctx.fillStyle = 'rgba(13, 13, 26, 0.12)'; ctx.fillRect(0, 0, W, H);
         modeState.waveTime += 0.012;
         const cols = modeState.waveCols, spacing = W / cols, mask = modeState.textMask;
+        const mW = modeState.maskW, mH = modeState.maskH;
         for (let i = 0; i <= cols; i++) {
             const baseX = i * spacing;
             const colDx = Math.abs(mouse.x - baseX);
@@ -198,9 +206,10 @@
             ctx.beginPath();
             for (let j = 0; j <= 80; j++) {
                 const y = (H / 80) * j;
-                const mx2 = Math.floor(baseX), my2 = Math.floor(y);
+                // Scale screen coords to mask coords
+                const mx2 = Math.floor(baseX / W * mW), my2 = Math.floor(y / H * mH);
                 let inText = false;
-                if (mx2 >= 0 && mx2 < W && my2 >= 0 && my2 < H) inText = mask[(my2 * W + mx2) * 4 + 3] > 128;
+                if (mx2 >= 0 && mx2 < mW && my2 >= 0 && my2 < mH) inText = mask[(my2 * mW + mx2) * 4 + 3] > 128;
                 const dy = mouse.y - y, dist = Math.sqrt(colDx * colDx + dy * dy) || 1;
                 const mw = Math.max(0, 1 - dist / 180) * 35;
                 let waveX = Math.sin(y * 0.02 + modeState.waveTime * 2 + i * 0.3) * 6 + Math.sin(y * 0.008 + modeState.waveTime * 0.8) * 4;
@@ -216,12 +225,12 @@
         }
         ctx.save();
         const fontSize = Math.min(W / 7, 140) * 1.4;
-        ctx.font = `900 ${fontSize}px "Outfit", sans-serif`;
+        ctx.font = `900 ${fontSize}px ${SAFE_FONT}`;
         ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
         ctx.fillStyle = 'rgba(255,255,255,0.03)';
         const tH = fontSize + fontSize * 0.85, sY = (H - tH) / 2 + fontSize / 2;
         ctx.fillText('ART &', W / 2, sY);
-        ctx.font = `900 ${fontSize * 0.85}px "Outfit", sans-serif`;
+        ctx.font = `900 ${fontSize * 0.85}px ${SAFE_FONT}`;
         ctx.fillText('Design', W / 2, sY + fontSize * 0.85);
         ctx.restore();
     }
@@ -469,14 +478,18 @@
         modeState.revealAlpha = 0;
         modeState.revealText = '艺术设计思维';
 
+        // Use small offscreen canvas for text mask — avoids mobile memory limits
+        const SAMPLE_W = 400, SAMPLE_H = 200;
         const off = document.createElement('canvas');
         const octx = off.getContext('2d');
-        off.width = W; off.height = H;
-        const fontSize = Math.min(W / 6, 130);
-        octx.font = `900 ${fontSize}px "Noto Sans SC", sans-serif`;
+        off.width = SAMPLE_W; off.height = SAMPLE_H;
+        const fontSize = Math.min(SAMPLE_W / 6, 50);
+        octx.font = `900 ${fontSize}px ${SAFE_FONT}`;
         octx.textAlign = 'center'; octx.textBaseline = 'middle'; octx.fillStyle = '#fff';
-        octx.fillText(modeState.revealText, W / 2, H / 2);
-        modeState.revealMask = octx.getImageData(0, 0, W, H).data;
+        octx.fillText(modeState.revealText, SAMPLE_W / 2, SAMPLE_H / 2);
+        modeState.revealMask = octx.getImageData(0, 0, SAMPLE_W, SAMPLE_H).data;
+        modeState.revealMaskW = SAMPLE_W;
+        modeState.revealMaskH = SAMPLE_H;
     }
 
     function spawnTetrisPiece() {
