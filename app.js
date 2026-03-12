@@ -67,10 +67,10 @@ function initSlideTabsCursor() {
    ============================================================ */
 function initBentoReveal() {
     const blocks = document.querySelectorAll(
-        '#page-home .dash-block, #page-home .dash-tile, #page-home .dash-stats-bar, #page-home .dash-portfolio-item'
+        '#page-home .swiss-card, #page-home .swiss-hero'
     );
     blocks.forEach((el, i) => {
-        el.style.setProperty('--reveal-i', i + 1);
+        el.style.setProperty('--reveal-i', i);
     });
 }
 
@@ -78,12 +78,12 @@ function initBentoReveal() {
    0b. Stats Counter — hover-triggered count-up animation
    ============================================================ */
 function initStatsCountUp() {
-    const bar = document.getElementById('dash-stats-bar');
-    if (!bar) return;
-    const nums = bar.querySelectorAll('.dash-stat-number');
+    const hero = document.querySelector('.swiss-hero');
+    if (!hero) return;
+    const nums = hero.querySelectorAll('.swiss-stat-num[data-target]');
     let animating = false;
 
-    bar.addEventListener('mouseenter', () => {
+    hero.addEventListener('mouseenter', () => {
         if (animating) return;
         animating = true;
         nums.forEach(el => {
@@ -94,7 +94,6 @@ function initStatsCountUp() {
             const tick = (now) => {
                 const elapsed = now - start;
                 const progress = Math.min(elapsed / duration, 1);
-                // ease-out cubic
                 const ease = 1 - Math.pow(1 - progress, 3);
                 const current = Math.round(target * ease);
                 el.textContent = current + suffix;
@@ -108,12 +107,51 @@ function initStatsCountUp() {
         });
     });
 
-    bar.addEventListener('mouseleave', () => {
+    hero.addEventListener('mouseleave', () => {
         setTimeout(() => {
             nums.forEach(el => el.textContent = '0');
             animating = false;
         }, 300);
     });
+
+    // Also auto-trigger count-up on page load after 1s
+    setTimeout(() => {
+        if (!animating) {
+            animating = true;
+            nums.forEach(el => {
+                const target = parseFloat(el.dataset.target);
+                const suffix = el.dataset.suffix || '';
+                const duration = 1200;
+                const start = performance.now();
+                const tick = (now) => {
+                    const elapsed = now - start;
+                    const progress = Math.min(elapsed / duration, 1);
+                    const ease = 1 - Math.pow(1 - progress, 3);
+                    const current = Math.round(target * ease);
+                    el.textContent = current + suffix;
+                    if (progress < 1) requestAnimationFrame(tick);
+                    else el.textContent = target + suffix;
+                };
+                requestAnimationFrame(tick);
+            });
+        }
+    }, 1000);
+
+    // Return-to-splash button
+    const splashBtn = document.getElementById('return-to-splash');
+    if (splashBtn) {
+        splashBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const splash = document.getElementById('splash-page');
+            if (splash) {
+                splash.style.display = '';
+                splash.style.opacity = '1';
+                splash.style.transition = 'none';
+                const split = document.getElementById('ipad-split');
+                if (split) split.style.display = 'none';
+            }
+        });
+    }
 }
 
 /* ============================================================
@@ -140,7 +178,7 @@ function playBubbleSound() {
    0d. Dashboard Hover Sound — bubble on module hover
    ============================================================ */
 function initDashboardHoverSound() {
-    const hoverTargets = document.querySelectorAll('.dash-block, .dash-tile, .dash-portfolio-item');
+    const hoverTargets = document.querySelectorAll('.swiss-card, .dash-block, .dash-tile, .dash-portfolio-item');
     hoverTargets.forEach(el => {
         el.addEventListener('mouseenter', () => {
             playBubbleSound();
