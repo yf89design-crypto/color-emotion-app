@@ -53,7 +53,7 @@
     --robot-wing-dk: #D4B43A;
 
     /* Background & Surfaces */
-    --bg-main: #FAFAF7;
+    --bg-main: #D8D0C4;
     --bg-warm: #FFF8EC;
     --bg-cool: #EAF6FF;
     --card-bg: #FFFFFF;
@@ -2894,14 +2894,14 @@ body {
     display: flex;
     align-items: flex-end;
     gap: 6px;
-    background: rgba(216, 208, 196, 0.85);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.5);
+    background: rgba(216, 208, 196, 0.45);
+    backdrop-filter: blur(24px) saturate(1.2);
+    -webkit-backdrop-filter: blur(24px) saturate(1.2);
+    border: none;
     border-radius: 22px;
     padding: 6px 14px;
     z-index: 50;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
     transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
     opacity: 0;
 }
