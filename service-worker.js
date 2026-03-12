@@ -1,5 +1,5 @@
 // Service Worker for 彩绘心灵 PWA
-const CACHE_NAME = 'color-emotion-app-v13';
+const CACHE_NAME = 'color-emotion-app-v14';
 const ASSETS_TO_CACHE = [
   './',
   './index.html',
@@ -61,13 +61,13 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-      return fetch(event.request).then((networkResponse) => {
-        // Cache successful responses for future use
+  const url = event.request.url;
+  const isCodeFile = url.endsWith('.html') || url.endsWith('.css') || url.endsWith('.js') || url.endsWith('/');
+
+  if (isCodeFile) {
+    // Network-first for HTML/CSS/JS — always get fresh code
+    event.respondWith(
+      fetch(event.request).then((networkResponse) => {
         if (networkResponse && networkResponse.status === 200) {
           const responseClone = networkResponse.clone();
           caches.open(CACHE_NAME).then((cache) => {
@@ -75,12 +75,32 @@ self.addEventListener('fetch', (event) => {
           });
         }
         return networkResponse;
-      });
-    }).catch(() => {
-      // If both cache and network fail, show offline fallback
-      if (event.request.destination === 'document') {
-        return caches.match('/index.html');
-      }
-    })
-  );
+      }).catch(() => {
+        // Offline: fall back to cache
+        return caches.match(event.request).then((cachedResponse) => {
+          return cachedResponse || (event.request.destination === 'document' ? caches.match('/index.html') : undefined);
+        });
+      })
+    );
+  } else {
+    // Cache-first for images and other assets (performance)
+    event.respondWith(
+      caches.match(event.request).then((cachedResponse) => {
+        if (cachedResponse) {
+          return cachedResponse;
+        }
+        return fetch(event.request).then((networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            const responseClone = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              cache.put(event.request, responseClone);
+            });
+          }
+          return networkResponse;
+        });
+      }).catch(() => {
+        return undefined;
+      })
+    );
+  }
 });
