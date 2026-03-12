@@ -10,7 +10,7 @@
     const ctx = canvas.getContext('2d');
 
     let W, H, mouse = { x: -9999, y: -9999 }, animId;
-    let exploded = false, entering = false;
+    let exploded = false, entering = false, restartCooldown = false;
 
     const isDark = () => document.documentElement.getAttribute('data-theme') === 'dark';
 
@@ -65,7 +65,7 @@
     canvas.addEventListener('touchend', handleSplashClick);
 
     function handleSplashClick(e) {
-        if (entering) return;
+        if (entering || restartCooldown) return;
         if (e.target.closest && e.target.closest('.playground-btn')) return;
         if (!exploded) {
             exploded = true; entering = true;
@@ -102,6 +102,8 @@
 
     // Listen for restart event (triggered by return-to-playground button)
     document.addEventListener('splash-restart', () => {
+        // Set cooldown to prevent immediate re-dismissal from touch events
+        restartCooldown = true;
         exploded = false;
         entering = false;
         currentMode = 0;
@@ -110,6 +112,8 @@
         animate();
         const pgLabel = document.getElementById('playground-label');
         if (pgLabel) pgLabel.textContent = MODES[0].name;
+        // Allow clicks again after 800ms
+        setTimeout(() => { restartCooldown = false; }, 800);
     });
 
     // ==========================================
