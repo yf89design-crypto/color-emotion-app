@@ -149,6 +149,8 @@ function initStatsCountUp() {
                 splash.style.transition = 'none';
                 const split = document.getElementById('ipad-split');
                 if (split) split.style.display = 'none';
+                // Restart particle effects
+                document.dispatchEvent(new CustomEvent('splash-restart'));
             }
         });
     }
