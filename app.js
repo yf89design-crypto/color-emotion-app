@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initStatsCountUp();
     initSlideTabsCursor();
     initBentoReveal();
+    initSwissCardTouch();
 });
 
 /* ============================================================
@@ -71,6 +72,38 @@ function initBentoReveal() {
     );
     blocks.forEach((el, i) => {
         el.style.setProperty('--reveal-i', i);
+    });
+}
+
+/* ============================================================
+   0a-3. Swiss Card Touch — 3D tilt on touch for tablet
+   ============================================================ */
+function initSwissCardTouch() {
+    const cards = document.querySelectorAll('.swiss-card');
+    cards.forEach(card => {
+        // Touch: apply 3D pressed effect
+        card.addEventListener('touchstart', (e) => {
+            card.classList.add('swiss-card-pressed');
+            // Calculate tilt based on touch position
+            const rect = card.getBoundingClientRect();
+            const x = e.touches[0].clientX - rect.left;
+            const y = e.touches[0].clientY - rect.top;
+            const centerX = rect.width / 2;
+            const centerY = rect.height / 2;
+            const rotateY = ((x - centerX) / centerX) * -12;
+            const rotateX = ((y - centerY) / centerY) * 8;
+            card.style.transform = `perspective(600px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-10px) scale(1.04)`;
+        }, { passive: true });
+
+        card.addEventListener('touchend', () => {
+            card.classList.remove('swiss-card-pressed');
+            card.style.transform = '';
+        });
+
+        card.addEventListener('touchcancel', () => {
+            card.classList.remove('swiss-card-pressed');
+            card.style.transform = '';
+        });
     });
 }
 
