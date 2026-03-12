@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>彩绘心灵 — AI 艺术设计思维伴学</title>
+    <meta name="description" content="基于AI教育机器人的儿童艺术设计思维培养APP Demo">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700;900&family=Outfit:wght@300;400;600;800;900&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <!-- PWA Support -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#F47B7B">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="彩绘心灵">
+    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+</head>
+
+<body>
+    <!-- ===== Theme Toggle (global) ===== -->
+    <button class="theme-toggle" id="theme-toggle" title="切换深色/浅色模式">
+        <span class="theme-icon">🌙</span>
+    </button>
+
+    <!-- ===== Devices Container (always visible) ===== -->
+    <div class="devices-container" id="devices-container">
+
+        <!-- ===== iPad Shell (Main App) ===== -->
+        <div class="ipad-shell" id="ipad-shell">
+            <div class="ipad-bezel">
+                <div class="ipad-camera"></div>
+                <div class="ipad-screen">
+
+                    <!-- Boot Splash (inside iPad) -->
+                    <div id="splash-page" class="splash-page">
+                        <canvas id="particle-canvas"></canvas>
+                        <button class="playground-btn" id="playground-btn" title="切换视觉效果">
+                            <span class="playground-icon">🎨</span>
+                            <span class="playground-label" id="playground-label">Particle Text</span>
+                            <span class="playground-arrow">›</span>
+                        </button>
+                        <div class="splash-hint">点击任意位置进入 ✨</div>
+                    </div>
+
+                    <!-- Split Layout: left chat + right content -->
+                    <div class="ipad-split" id="ipad-split" style="display:none">
+
+                        <!-- LEFT: Robot Chat Panel -->
+                        <div class="ipad-chat-panel">
+                            <div class="chat-robot-avatar">
+                                <div class="robot-avatar-3d" id="robot-avatar-ipad">
+                                    <div class="robot-body">
+                                        <div class="robot-cap"></div>
+                                        <div class="robot-head">
+                                            <div class="robot-face-screen">
+                                                <div class="robot-eye left">
+                                                    <div class="eye-ring"></div>
+                                                    <div class="eye-pupil"></div>
+                                                </div>
+                                                <div class="robot-eye right">
+                                                    <div class="eye-ring"></div>
+                                                    <div class="eye-pupil"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="robot-wing left-wing"></div>
+                                    <div class="robot-wing right-wing"></div>
+                                    <div class="robot-belly"></div>
+                                </div>
+                            </div>
+                            <div class="chat-bubbles" id="chat-bubbles">
+                                <div class="chat-bubble bot">你好呀！我是噗噗～ 今天我们来学习色彩与情绪的关系吧！</div>
+                            </div>
+                            <div class="chat-status">
+                                <div class="robot-name">噗噗 · AI 伴学</div>
+                                <div class="robot-status-badge" id="robot-status-badge-ipad">
+                                    <span class="status-led" id="status-led-ipad"></span>
+                                    <span id="status-text-ipad">待机中</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- RIGHT: Main Content -->
+                        <div class="ipad-content-panel">
+
+                            <!-- ===== PAGE: Home (Dashboard Grid) ===== -->
+                            <section id="page-home" class="page active">
+
+                                <!-- Top Navigation Bar -->
+                                <nav class="dash-topnav" id="dash-topnav">
+                                    <div class="dash-nav-cursor" id="dash-nav-cursor"></div>
+                                    <a class="dash-nav-item active" data-tab="home">🏠 主页</a>
+                                    <a class="dash-nav-item" data-tab="wiki">📖 艺术百科</a>
+                                    <a class="dash-nav-item" data-tab="basic">🧠 思维训练</a>
+                                    <a class="dash-nav-item" data-tab="portfolio">📁 小小作品集</a>
+                                    <a class="dash-nav-item" data-tab="community">💬 创作社区</a>
+                                    <span class="dash-nav-spacer"></span>
+                                    <a class="dash-nav-item" data-tab="profile">我的 👤</a>
+                                </nav>
+
+                                <!-- Grid Dashboard -->
+                                <div class="dash-grid">
+
+                                    <div class="dash-col dash-col-left">
+                                        <!-- Stats Counter Bar -->
+                                        <div class="dash-stats-bar" id="dash-stats-bar">
+                                            <div class="dash-stat">
+                                                <span class="dash-stat-number" data-target="2" data-suffix="h">0</span>
+                                                <span class="dash-stat-label">🕐</span>
+                                            </div>
+                                            <div class="dash-stat">
+                                                <span class="dash-stat-number" data-target="15" data-suffix="%">0</span>
+                                                <span class="dash-stat-label">📊</span>
+                                            </div>
+                                            <div class="dash-stat">
+                                                <span class="dash-stat-number" data-target="5" data-suffix="">0</span>
+                                                <span class="dash-stat-label">🏅</span>
+                                            </div>
+                                        </div>
+
+                                        <div class="dash-block" data-tab="wiki">
+                                            <div class="dash-block-title">📖 艺术小百科</div>
+                                            <div class="dash-block-content" style="background:#8ed500">
+                                                <div class="dash-list-item">
+                                                    <div class="dli-thumb"
+                                                        style="background:linear-gradient(135deg,#F47B7B,#F9A87C)">
+                                                    </div>
+                                                    <div class="dli-info"><span>色彩的秘密</span></div>
+                                                    <span class="dli-play">▶</span>
+                                                </div>
+                                                <div class="dash-list-item">
+                                                    <div class="dli-thumb"
+                                                        style="background:linear-gradient(135deg,#7DD8C2,#7BBDE8)">
+                                                    </div>
+                                                    <div class="dli-info"><span>大师的故事</span></div>
+                                                    <span class="dli-play">▶</span>
+                                                </div>
+                                                <div class="dash-list-item">
+                                                    <div class="dli-thumb"
+                                                        style="background:linear-gradient(135deg,#B8A0E8,#F78CA8)">
+                                                    </div>
+                                                    <div class="dli-info"><span>线条的魔法</span></div>
+                                                    <span class="dli-play">▶</span>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div style="flex:1"></div>
+
+                                        <!-- 创作社区 -->
+                                        <div class="dash-block" data-tab="community">
+                                            <div class="dash-block-title">💬 创作社区</div>
+                                            <div class="dash-block-content" style="background:#FF8A65">
+                                                <div class="dash-community-actions">
+                                                    <div class="dca-btn"><span>📤</span><label>创作</label></div>
+                                                    <div class="dca-btn"><span>❤️</span><label>关注</label></div>
+                                                    <div class="dca-btn dca-badge"><span>💬</span><label>消息</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Center Column: 思维大训练 -->
+                                    <div class="dash-col dash-col-center">
+                                        <div class="dash-block-title">🧠 思维大训练</div>
+
+                                        <div class="dash-block" id="dash-basic" data-tab="basic">
+                                            <div class="dash-block-title">🌟 基础训练</div>
+                                            <div class="dash-block-content" style="background:#e8d5b0">
+                                                <h3 style="font-size:18px;font-weight:900;color:#222;margin-bottom:4px">
+                                                    基础训练</h3>
+                                                <p style="font-size:11px;color:#444">培养感性感知和理性思维</p>
+                                            </div>
+                                        </div>
+
+                                        <div class="dash-block" id="dash-theme" data-tab="theme">
+                                            <div class="dash-block-title">🎭 主题训练</div>
+                                            <div class="dash-block-content" style="background:#a8d8a0">
+                                                <h3 style="font-size:18px;font-weight:900;color:#222;margin-bottom:4px">
+                                                    主题训练</h3>
+                                                <p style="font-size:11px;color:#444">综合解决问题能力</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Right Column: 小小作品集 -->
+                                    <div class="dash-col dash-col-right">
+                                        <div class="dash-block" data-tab="portfolio">
+                                            <div class="dash-block-title">📁 小小作品集</div>
+                                            <div class="dash-block-content" style="background:#B39DDB">
+                                                <div class="dash-portfolio-item">
+                                                    <div class="dpi-card"
+                                                        style="background:linear-gradient(135deg,#F9A87C,#F47B7B)">
+                                                    </div>
+                                                    <p class="dpi-label">"给妈妈的礼物"<br><small>2025.12.9</small></p>
+                                                </div>
+                                                <div class="dash-portfolio-item">
+                                                    <div class="dpi-card"
+                                                        style="background:linear-gradient(135deg,#7BBDE8,#4F7FBF)">
+                                                    </div>
+                                                    <p class="dpi-label">"色彩的翅膀"<br><small>2025.12.1</small></p>
+                                                </div>
+                                                <div class="dash-portfolio-item">
+                                                    <div class="dpi-card"
+                                                        style="background:linear-gradient(135deg,#8DD88C,#43A047)">
+                                                    </div>
+                                                    <p class="dpi-label">"石头色的猫"<br><small>2025.11.25</small></p>
+                                                </div>
+                                                <div class="dash-dots">
+                                                    <span class="dot active"></span>
+                                                    <span class="dot"></span>
+                                                    <span class="dot"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div><!-- /dash-grid -->
+
+                        </div>
+
+                        </section>
+
+                        <!-- ===== PAGE: Stage 1 — Color Wheel ===== -->
+                        <section id="page-stage1" class="page">
+                            <header class="stage-bar">
+                                <button class="back-btn" data-target="page-home">←</button>
+                                <div class="step-dots">
+                                    <i class="dot active">1</i><i class="dot">2</i><i class="dot">3</i><i
+                                        class="dot">4</i><i class="dot">5</i>
+                                </div>
+                                <span class="stage-title">情境导入</span>
+                            </header>
+                            <div class="stage-body s1-body">
+                                <div class="bot-msg">
+                                    <div class="bot-face" id="s1-face">😊</div>
+                                    <div class="bubble">
+                                        <p>你好呀小朋友！你今天心情怎么样？</p>
+                                        <p>如果用一种<strong>颜色</strong>来表示，你会选什么颜色呢？✨</p>
+                                    </div>
+                                </div>
+                                <div class="fibonacci-spiral" id="fibonacci-spiral">
+                                    <div class="fib-center-label">选一个颜色</div>
+                                </div>
+                                <div id="color-feedback" class="color-feedback" style="display:none">
+                                    <div class="cf-swatch" id="cf-swatch"></div>
+                                    <div class="cf-name" id="cf-name"></div>
+                                    <div class="cf-desc" id="cf-desc"></div>
+                                </div>
+                                <button class="action-btn" id="btn-to-s2" style="display:none"
+                                    data-target="page-stage2">继续探索
+                                    →</button>
+                            </div>
+                        </section>
+
+                        <!-- ===== PAGE: Stage 2 — Knowledge ===== -->
+                        <section id="page-stage2" class="page">
+                            <header class="stage-bar">
+                                <button class="back-btn" data-target="page-stage1">←</button>
+                                <div class="step-dots"><i class="dot done">1</i><i class="dot active">2</i><i
+                                        class="dot">3</i><i class="dot">4</i><i class="dot">5</i></div>
+                                <span class="stage-title">知识探索</span>
+                            </header>
+                            <div class="stage-body s2-body">
+                                <div class="bot-msg">
+                                    <div class="bot-face">🔍</div>
+                                    <div class="bubble">
+                                        <p>每种颜色都藏着不同的情绪密码哦！翻翻卡片来发现吧～</p>
+                                    </div>
+                                </div>
+                                <div class="card-wall" id="card-wall"></div>
+                                <div id="quiz-section" style="display:none">
+                                    <div class="bot-msg">
+                                        <div class="bot-face">🤔</div>
+                                        <div class="bubble">
+                                            <p>来玩一个"猜猜看"游戏吧！看看这幅画，你觉得画家想表达什么情绪？</p>
+                                        </div>
+                                    </div>
+                                    <div class="quiz-card">
+                                        <div class="quiz-art" id="quiz-art"></div>
+                                        <h3 id="quiz-q"></h3>
+                                        <div id="quiz-opts"></div>
+                                        <div id="quiz-result" style="display:none"></div>
+                                    </div>
+                                    <button class="action-btn" id="btn-to-s3" style="display:none"
+                                        data-target="page-stage3">开始创作 🎨
+                                        →</button>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- ===== PAGE: Stage 3 — Canvas ===== -->
+                        <section id="page-stage3" class="page">
+                            <header class="stage-bar">
+                                <button class="back-btn" data-target="page-stage2">←</button>
+                                <div class="step-dots"><i class="dot done">1</i><i class="dot done">2</i><i
+                                        class="dot active">3</i><i class="dot">4</i><i class="dot">5</i></div>
+                                <span class="stage-title">动手创作</span>
+                            </header>
+                            <div class="canvas-workspace">
+                                <div class="canvas-hint">
+                                    <div class="bot-face">🎨</div>
+                                    <p>用色彩画出你今天的<strong>心情故事</strong>吧！</p>
+                                </div>
+                                <div class="canvas-area"><canvas id="drawing-canvas"></canvas></div>
+                                <div class="canvas-tools">
+                                    <div class="palette" id="palette"></div>
+                                    <div class="tools-row">
+                                        <button class="tbtn active" id="t-brush">🖌️</button>
+                                        <button class="tbtn" id="t-eraser">🧹</button>
+                                        <button class="tbtn" id="t-undo">↩️</button>
+                                        <button class="tbtn" id="t-clear">🗑️</button>
+                                        <input type="range" id="brush-size" min="2" max="30" value="8"
+                                            class="size-slider">
+                                        <span id="size-label">8px</span>
+                                    </div>
+                                </div>
+                                <div class="inspo-bar"><span class="inspo-label">💡 灵感</span>
+                                    <div class="inspo-chips" id="inspo-chips"></div>
+                                </div>
+                                <button class="action-btn warm" id="btn-submit">✨ 完成创作，看看 AI 怎么说</button>
+                            </div>
+                        </section>
+
+                        <!-- ===== PAGE: Stage 4 — AI Review ===== -->
+                        <section id="page-stage4" class="page">
+                            <header class="stage-bar">
+                                <button class="back-btn" data-target="page-stage3">←</button>
+                                <div class="step-dots"><i class="dot done">1</i><i class="dot done">2</i><i
+                                        class="dot done">3</i><i class="dot active">4</i><i class="dot">5</i></div>
+                                <span class="stage-title">AI 点评</span>
+                            </header>
+                            <div class="stage-body s4-body">
+                                <div class="scan-zone" id="scan-zone">
+                                    <div class="scan-art" id="scan-art"></div>
+                                    <div class="scan-line"></div>
+                                    <p class="scan-text">🤖 让我仔细看看你的作品…</p>
+                                </div>
+                                <div id="review-zone" style="display:none">
+                                    <div class="bot-msg">
+                                        <div class="bot-face">🤩</div>
+                                        <div class="bubble">
+                                            <p>哇！你的作品太棒了！让我来跟你分享我的发现～ 🌟</p>
+                                        </div>
+                                    </div>
+                                    <div class="review-art" id="review-art"></div>
+                                    <div class="review-cards" id="review-cards">
+                                        <div class="rv-card" id="rv-color">
+                                            <div class="rv-head"><span>🎨</span>
+                                                <h3>色彩运用</h3>
+                                            </div>
+                                            <div class="rv-chart" id="rv-chart"></div>
+                                            <p class="rv-text" id="rv-color-t"></p>
+                                        </div>
+                                        <div class="rv-card" id="rv-emo">
+                                            <div class="rv-head"><span>💖</span>
+                                                <h3>情感表达</h3>
+                                            </div>
+                                            <div class="rv-tags" id="rv-tags"></div>
+                                            <p class="rv-text" id="rv-emo-t"></p>
+                                        </div>
+                                        <div class="rv-card" id="rv-cre">
+                                            <div class="rv-head"><span>✨</span>
+                                                <h3>创意指数</h3>
+                                            </div>
+                                            <div class="rv-stars" id="rv-stars"></div>
+                                            <p class="rv-text" id="rv-cre-t"></p>
+                                        </div>
+                                        <div class="rv-card" id="rv-think">
+                                            <div class="rv-head"><span>🧠</span>
+                                                <h3>设计思维</h3>
+                                            </div>
+                                            <div class="rv-badges" id="rv-badges"></div>
+                                            <p class="rv-text" id="rv-think-t"></p>
+                                        </div>
+                                    </div>
+                                    <div class="badge-awarded" id="badge-awarded">
+                                        <div class="badge-glow"></div>
+                                        <div class="badge-medal">🎖️</div>
+                                        <p>色彩情绪大师</p>
+                                    </div>
+                                    <!-- Artwork 3D Animation -->
+                                    <button class="action-btn warm" id="btn-animate-art" style="display:none">🎬
+                                        画作动态化 —
+                                        3D效果</button>
+                                    <div class="artwork-3d-container" id="artwork-3d-container" style="display:none">
+                                        <canvas class="artwork-3d-canvas" id="artwork-3d-canvas"></canvas>
+                                        <div class="artwork-3d-label">🌀 3D 动态画作</div>
+                                    </div>
+                                    <button class="action-btn" id="btn-to-s5" style="display:none"
+                                        data-target="page-stage5">查看总结 📊
+                                        →</button>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- ===== PAGE: Stage 5 — Summary ===== -->
+                        <section id="page-stage5" class="page">
+                            <header class="stage-bar">
+                                <button class="back-btn" data-target="page-stage4">←</button>
+                                <div class="step-dots"><i class="dot done">1</i><i class="dot done">2</i><i
+                                        class="dot done">3</i><i class="dot done">4</i><i class="dot active">5</i>
+                                </div>
+                                <span class="stage-title">课后总结</span>
+                            </header>
+                            <div class="stage-body s5-body">
+                                <div class="bot-msg">
+                                    <div class="bot-face">🎉</div>
+                                    <div class="bubble">
+                                        <p>太厉害了！你完成了今天的课程！来看看你的收获吧～</p>
+                                    </div>
+                                </div>
+                                <div class="sum-section">
+                                    <h3>🌟 本课收获</h3>
+                                    <div class="radar-wrap"><canvas id="radar-chart" width="300" height="300"></canvas>
+                                    </div>
+                                </div>
+                                <div class="sum-section">
+                                    <h3>📝 知识小结</h3>
+                                    <div class="know-list">
+                                        <div class="know-item"><span class="know-n">1</span>
+                                            <p>每种颜色都有自己的"情绪"——暖色代表热情活力，冷色代表平静安宁</p>
+                                        </div>
+                                        <div class="know-item"><span class="know-n">2</span>
+                                            <p>艺术家会有意选择颜色来表达他们的感受和想法</p>
+                                        </div>
+                                        <div class="know-item"><span class="know-n">3</span>
+                                            <p>你也可以用色彩来"说话"——画出属于自己的情绪故事</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="sum-section">
+                                    <h3>🚀 延伸挑战</h3>
+                                    <div class="challenge-grid">
+                                        <div class="ch-card"><span>📸</span>
+                                            <h4>色彩猎人</h4>
+                                            <p>明天观察身边的颜色，拍一张让你感到开心的照片上传吧！</p>
+                                        </div>
+                                        <div class="ch-card"><span>🎨</span>
+                                            <h4>安静的画</h4>
+                                            <p>尝试只用冷色调，画一幅"安静"的画</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="share-box">
+                                    <div class="share-inner">
+                                        <div class="share-top"><span>🌿 彩绘心灵</span><span>色彩的情绪</span></div>
+                                        <div class="share-art" id="share-art"></div>
+                                        <div class="share-badge">🎖️ 色彩情绪大师</div>
+                                        <div class="share-quote" id="share-quote"></div>
+                                    </div>
+                                    <button class="action-btn mint" id="btn-share">📤 生成分享卡片</button>
+                                </div>
+                                <button class="action-btn outline" data-target="page-home">🏠 返回首页</button>
+                            </div>
+                        </section>
+
+                        <!-- ===== SHAPE COURSE: Stage 1 — Shape Hunter ===== -->
+                        <section id="page-shape1" class="page">
+                            <header class="stage-bar">
+                                <button class="back-btn" data-target="page-home">←</button>
+                                <div class="step-dots"><i class="dot active">1</i><i class="dot">2</i><i
+                                        class="dot">3</i><i class="dot">4</i><i class="dot">5</i></div>
+                                <span class="stage-title">🔺 形状猎人</span>
+                            </header>
+                            <div class="stage-body shape-s1-body">
+                                <div class="bot-msg">
+                                    <div class="bot-face">😊</div>
+                                    <div class="bubble">
+                                        <p>你发现了吗？我们身边到处都藏着<strong>形状</strong>的秘密！</p>
+                                        <p>把下面的物品拖到对应的形状上试试？ ✨</p>
+                                    </div>
+                                </div>
+                                <div class="shape-match-game" id="shape-match-game">
+                                    <div class="shape-objects">
+                                        <div class="shape-obj" draggable="true" data-shape="circle" id="obj-cup">
+                                            <span>☕</span><label>杯子</label>
+                                        </div>
+                                        <div class="shape-obj" draggable="true" data-shape="square" id="obj-book">
+                                            <span>📖</span><label>书本</label>
+                                        </div>
+                                        <div class="shape-obj" draggable="true" data-shape="triangle" id="obj-roof">
+                                            <span>🏠</span><label>屋顶</label>
+                                        </div>
+                                    </div>
+                                    <div class="shape-targets">
+                                        <div class="shape-target" data-shape="circle" id="target-circle">
+                                            <svg viewBox="0 0 80 80">
+                                                <circle cx="40" cy="40" r="35" fill="none" stroke="currentColor"
+                                                    stroke-width="3" stroke-dasharray="8,4" />
+                                            </svg>
+                                            <label>圆形 ⚪</label>
+                                        </div>
+                                        <div class="shape-target" data-shape="triangle" id="target-triangle">
+                                            <svg viewBox="0 0 80 80">
+                                                <polygon points="40,5 75,75 5,75" fill="none" stroke="currentColor"
+                                                    stroke-width="3" stroke-dasharray="8,4" />
+                                            </svg>
+                                            <label>三角形 △</label>
+                                        </div>
+                                        <div class="shape-target" data-shape="square" id="target-square">
+                                            <svg viewBox="0 0 80 80">
+                                                <rect x="10" y="10" width="60" height="60" fill="none"
+                                                    stroke="currentColor" stroke-width="3" stroke-dasharray="8,4" />
+                                            </svg>
+                                            <label>方形 ▢</label>
+                                        </div>
+                                    </div>
+                                    <div class="match-score" id="match-score">匹配: 0/3</div>
+                                </div>
+                                <button class="action-btn" id="btn-to-shape2" style="display:none"
+                                    data-target="page-shape2">继续探索 →</button>
+                            </div>
+                        </section>
+
+                        <!-- ===== SHAPE COURSE: Stage 2 — Knowledge ===== -->
+                        <section id="page-shape2" class="page">
+                            <header class="stage-bar">
+                                <button class="back-btn" data-target="page-shape1">←</button>
+                                <div class="step-dots"><i class="dot done">1</i><i class="dot active">2</i><i
+                                        class="dot">3</i><i class="dot">4</i><i class="dot">5</i></div>
+                                <span class="stage-title">🔍 形状情绪卡</span>
+                            </header>
+                            <div class="stage-body shape-s2-body">
+                                <div class="bot-msg">
+                                    <div class="bot-face">🔍</div>
+                                    <div class="bubble">
+                                        <p>每种形状都有自己的"情绪语言"！翻翻卡片来发现吧～</p>
+                                    </div>
+                                </div>
+                                <div class="shape-cards-wall" id="shape-cards-wall">
+                                    <div class="shape-flip-card" data-shape="circle">
+                                        <div class="sfc-inner">
+                                            <div class="sfc-front">
+                                                <svg viewBox="0 0 100 100">
+                                                    <circle cx="50" cy="50" r="40" fill="#FFB5B5" />
+                                                </svg>
+                                                <h3>圆形</h3>
+                                            </div>
+                                            <div class="sfc-back">
+                                                <div class="sfc-emotion">🤗</div>
+                                                <h3>温柔 · 安全</h3>
+                                                <p>圆形是最柔和的形状，就像妈妈的拥抱，没有尖角，给人温暖安全的感觉。</p>
+                                                <div class="sfc-artist">🎨 案例：草间弥生的波点世界</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="shape-flip-card" data-shape="triangle">
+                                        <div class="sfc-inner">
+                                            <div class="sfc-front">
+                                                <svg viewBox="0 0 100 100">
+                                                    <polygon points="50,10 90,85 10,85" fill="#FFD93D" />
+                                                </svg>
+                                                <h3>三角形</h3>
+                                            </div>
+                                            <div class="sfc-back">
+                                                <div class="sfc-emotion">⚡</div>
+                                                <h3>力量 · 冒险</h3>
+                                                <p>三角形尖尖的，充满方向感和力量，就像超人的披风或高高的金字塔！</p>
+                                                <div class="sfc-artist">🎨 案例：康定斯基的几何抽象</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="shape-flip-card" data-shape="square">
+                                        <div class="sfc-inner">
+                                            <div class="sfc-front">
+                                                <svg viewBox="0 0 100 100">
+                                                    <rect x="15" y="15" width="70" height="70" fill="#7DD8C2" rx="4" />
+                                                </svg>
+                                                <h3>方形</h3>
+                                            </div>
+                                            <div class="sfc-back">
+                                                <div class="sfc-emotion">🏛️</div>
+                                                <h3>稳定 · 信任</h3>
+                                                <p>方形四边相等，稳稳当当地站在那里，就像坚固的城堡，让人感到可靠安心。</p>
+                                                <div class="sfc-artist">🎨 案例：蒙德里安的格子画</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="shape-cards-hint" id="shape-cards-hint">点击卡片翻转查看 👆</div>
+                                <button class="action-btn" id="btn-to-shape3" style="display:none"
+                                    data-target="page-shape3">开始创作 🎨 →</button>
+                            </div>
+                        </section>
+
+                        <!-- ===== SHAPE COURSE: Stage 3 — Shape Collage Canvas ===== -->
+                        <section id="page-shape3" class="page">
+                            <header class="stage-bar">
+                                <button class="back-btn" data-target="page-shape2">←</button>
+                                <div class="step-dots"><i class="dot done">1</i><i class="dot done">2</i><i
+                                        class="dot active">3</i><i class="dot">4</i><i class="dot">5</i></div>
+                                <span class="stage-title">🖌️ 形状组合画</span>
+                            </header>
+                            <div class="canvas-workspace shape-canvas-ws">
+                                <div class="canvas-hint">
+                                    <div class="bot-face">🎨</div>
+                                    <p>用<strong>形状</strong>组合创作一个有趣的角色或场景吧！</p>
+                                </div>
+                                <div class="shape-canvas-area">
+                                    <svg id="shape-canvas" class="shape-svg-canvas" viewBox="0 0 500 400">
+                                        <rect width="500" height="400" fill="#FFF9F0" rx="12" />
+                                    </svg>
+                                </div>
+                                <div class="shape-tools">
+                                    <div class="shape-palette">
+                                        <button class="shape-tool-btn active" data-add-shape="circle" title="添加圆形">
+                                            <svg viewBox="0 0 30 30">
+                                                <circle cx="15" cy="15" r="12" fill="#FFB5B5" />
+                                            </svg>
+                                        </button>
+                                        <button class="shape-tool-btn" data-add-shape="triangle" title="添加三角形">
+                                            <svg viewBox="0 0 30 30">
+                                                <polygon points="15,3 28,27 2,27" fill="#FFD93D" />
+                                            </svg>
+                                        </button>
+                                        <button class="shape-tool-btn" data-add-shape="square" title="添加方形">
+                                            <svg viewBox="0 0 30 30">
+                                                <rect x="4" y="4" width="22" height="22" fill="#7DD8C2" rx="3" />
+                                            </svg>
+                                        </button>
+                                        <button class="shape-tool-btn" data-add-shape="star" title="添加星形">
+                                            <svg viewBox="0 0 30 30">
+                                                <polygon
+                                                    points="15,2 18.5,11 28,11 20.5,17 23,27 15,21 7,27 9.5,17 2,11 11.5,11"
+                                                    fill="#C4B5FD" />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                    <div class="shape-color-picks">
+                                        <button class="scp" data-color="#FFB5B5" style="background:#FFB5B5"></button>
+                                        <button class="scp" data-color="#FFD93D" style="background:#FFD93D"></button>
+                                        <button class="scp" data-color="#7DD8C2" style="background:#7DD8C2"></button>
+                                        <button class="scp" data-color="#C4B5FD" style="background:#C4B5FD"></button>
+                                        <button class="scp" data-color="#60A5FA" style="background:#60A5FA"></button>
+                                        <button class="scp" data-color="#FF8C42" style="background:#FF8C42"></button>
+                                    </div>
+                                    <div class="shape-actions">
+                                        <button class="tbtn" id="shape-undo">↩️</button>
+                                        <button class="tbtn" id="shape-clear">🗑️</button>
+                                        <input type="range" id="shape-size" min="30" max="120" value="60"
+                                            class="size-slider">
+                                    </div>
+                                </div>
+                                <button class="action-btn warm" id="btn-shape-submit">✨ 完成创作，让 AI 看看</button>
+                            </div>
+                        </section>
+
+                        <!-- ===== SHAPE COURSE: Stage 4 — AI Review ===== -->
+                        <section id="page-shape4" class="page">
+                            <header class="stage-bar">
+                                <button class="back-btn" data-target="page-shape3">←</button>
+                                <div class="step-dots"><i class="dot done">1</i><i class="dot done">2</i><i
+                                        class="dot done">3</i><i class="dot">4</i><i class="dot active">4</i></div>
+                                <span class="stage-title">🤖 AI 点评</span>
+                            </header>
+                            <div class="stage-body s4-body shape-s4-body">
+                                <div class="scan-zone" id="shape-scan-zone">
+                                    <div class="scan-art" id="shape-scan-art"></div>
+                                    <div class="scan-line"></div>
+                                    <p class="scan-text">🤖 让噗噗分析一下你的形状作品…</p>
+                                </div>
+                                <div id="shape-review-zone" style="display:none">
+                                    <div class="bot-msg">
+                                        <div class="bot-face">🤩</div>
+                                        <div class="bubble">
+                                            <p>哇！你的形状组合太有创意了！让我来跟你分享～ 🌟</p>
+                                        </div>
+                                    </div>
+                                    <div class="review-cards" id="shape-review-cards">
+                                        <div class="rv-card">
+                                            <div class="rv-head"><span>🔺</span>
+                                                <h3>形状使用</h3>
+                                            </div>
+                                            <div class="shape-ratio-chart" id="shape-ratio-chart"></div>
+                                            <p class="rv-text" id="shape-ratio-text"></p>
+                                        </div>
+                                        <div class="rv-card">
+                                            <div class="rv-head"><span>💭</span>
+                                                <h3>形状性格</h3>
+                                            </div>
+                                            <div class="shape-personality" id="shape-personality"></div>
+                                            <p class="rv-text" id="shape-personality-text"></p>
+                                        </div>
+                                        <div class="rv-card">
+                                            <div class="rv-head"><span>✨</span>
+                                                <h3>创意评分</h3>
+                                            </div>
+                                            <div class="rv-stars" id="shape-stars"></div>
+                                            <p class="rv-text" id="shape-creativity-text"></p>
+                                        </div>
+                                    </div>
+                                    <div class="badge-awarded" id="shape-badge">
+                                        <div class="badge-glow"></div>
+                                        <div class="badge-medal">🏅</div>
+                                        <p>形状组合大师</p>
+                                    </div>
+                                    <button class="action-btn" id="btn-to-shape5" style="display:none"
+                                        data-target="page-shape5">查看总结 📊 →</button>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- ===== SHAPE COURSE: Stage 5 — Summary ===== -->
+                        <section id="page-shape5" class="page">
+                            <header class="stage-bar">
+                                <button class="back-btn" data-target="page-shape4">←</button>
+                                <div class="step-dots"><i class="dot done">1</i><i class="dot done">2</i><i
+                                        class="dot done">3</i><i class="dot done">4</i><i class="dot active">5</i>
+                                </div>
+                                <span class="stage-title">🎉 课后总结</span>
+                            </header>
+                            <div class="stage-body s5-body">
+                                <div class="bot-msg">
+                                    <div class="bot-face">🎉</div>
+                                    <div class="bubble">
+                                        <p>太厉害了！你已经掌握了形状的秘密！来看看你的收获吧～</p>
+                                    </div>
+                                </div>
+                                <div class="sum-section">
+                                    <h3>🌟 本课收获</h3>
+                                    <div class="radar-wrap"><canvas id="shape-radar-chart" width="300"
+                                            height="300"></canvas></div>
+                                </div>
+                                <div class="sum-section">
+                                    <h3>📝 知识小结</h3>
+                                    <div class="know-list">
+                                        <div class="know-item"><span class="know-n">1</span>
+                                            <p>每种形状都有自己的"语言"——圆形温柔，三角形有力，方形稳定</p>
+                                        </div>
+                                        <div class="know-item"><span class="know-n">2</span>
+                                            <p>设计师会选择不同的形状来传递不同的感觉和情绪</p>
+                                        </div>
+                                        <div class="know-item"><span class="know-n">3</span>
+                                            <p>组合多种形状可以创造出有趣的视觉效果和角色</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="sum-section">
+                                    <h3>🚀 延伸挑战</h3>
+                                    <div class="challenge-grid">
+                                        <div class="ch-card"><span>📸</span>
+                                            <h4>形状侦探</h4>
+                                            <p>拍3张生活中有趣的形状照片，看看你能发现多少隐藏的几何图案！</p>
+                                        </div>
+                                        <div class="ch-card"><span>🎨</span>
+                                            <h4>纯形画作</h4>
+                                            <p>只用圆形和三角形，画一幅有关大自然的画</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="action-btn outline" data-target="page-home">🏠 返回首页</button>
+                            </div>
+                        </section>
+
+                        <!-- ===== PAGE: 基础训练 ===== -->
+                        <section id="page-basic" class="page">
+                            <header class="stage-bar">
+                                <button class="back-btn" data-target="page-home">←</button>
+                                <span class="stage-title">🎨 基础训练</span>
+                            </header>
+                            <div class="stage-body module-page-body">
+                                <p class="module-desc">培养基础感性感知和理性思维方法</p>
+                                <div class="module-grid">
+                                    <div class="module-card-lg" id="btn-start-course-basic">
+                                        <div class="mc-thumb-lg"
+                                            style="background:linear-gradient(135deg,#F47B7B,#F9A87C)">🌈</div>
+                                        <div class="mc-info-lg">
+                                            <h3>色彩的情绪</h3>
+                                            <p>用色彩表达你的心情，探索颜色与情绪的秘密</p>
+                                            <div class="mc-meta"><span>🕐 25分钟</span><span>🎯 7-10岁</span><span>⭐
+                                                    色彩感知</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="module-card-lg" id="btn-start-shape-basic">
+                                        <div class="mc-thumb-lg"
+                                            style="background:linear-gradient(135deg,#7DD8C2,#7BBDE8)">🔺</div>
+                                        <div class="mc-info-lg">
+                                            <h3>形状的力量</h3>
+                                            <p>探索不同形状传递的力量与情绪</p>
+                                            <div class="mc-meta"><span>🕐 20分钟</span><span>🎯 7-10岁</span><span>⭐
+                                                    形状感知</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="module-card-lg locked">
+                                        <div class="mc-thumb-lg"
+                                            style="background:linear-gradient(135deg,#B8A0E8,#F78CA8)">🧱</div>
+                                        <div class="mc-info-lg">
+                                            <h3>材质的触感</h3>
+                                            <p>了解不同材质带来的感觉和情绪</p>
+                                            <div class="mc-meta"><span>🔒 即将解锁</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="module-card-lg locked">
+                                        <div class="mc-thumb-lg"
+                                            style="background:linear-gradient(135deg,#F7E06B,#8DD88C)">📐</div>
+                                        <div class="mc-info-lg">
+                                            <h3>空间的故事</h3>
+                                            <p>发现空间中的设计思维与构图法则</p>
+                                            <div class="mc-meta"><span>🔒 即将解锁</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- ===== PAGE: 主题训练 ===== -->
+                        <section id="page-theme" class="page">
+                            <header class="stage-bar">
+                                <button class="back-btn" data-target="page-home">←</button>
+                                <span class="stage-title">🧩 主题训练</span>
+                            </header>
+                            <div class="stage-body module-page-body">
+                                <p class="module-desc">通过设计主题训练孩子综合解决问题能力</p>
+                                <div class="module-grid">
+                                    <div class="module-card-lg">
+                                        <div class="mc-thumb-lg"
+                                            style="background:linear-gradient(135deg,#43e97b,#38f9d7)">🏞️</div>
+                                        <div class="mc-info-lg">
+                                            <h3>设计一个公园</h3>
+                                            <p>综合运用色彩、形状和空间，设计你理想中的公园</p>
+                                            <div class="mc-meta"><span>⭐ 项目制</span><span>🕐 40分钟</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="module-card-lg locked">
+                                        <div class="mc-thumb-lg"
+                                            style="background:linear-gradient(135deg,#fa709a,#fee140)">🏠</div>
+                                        <div class="mc-info-lg">
+                                            <h3>我的梦想房间</h3>
+                                            <p>运用设计思维打造属于你的梦想空间</p>
+                                            <div class="mc-meta"><span>🔒 即将开放</span></div>
+                                        </div>
+                                    </div>
+                                    <div class="module-card-lg locked">
+                                        <div class="mc-thumb-lg"
+                                            style="background:linear-gradient(135deg,#4facfe,#00f2fe)">🎭</div>
+                                        <div class="mc-info-lg">
+                                            <h3>情绪面具DIY</h3>
+                                            <p>用设计表达和理解不同的情绪</p>
+                                            <div class="mc-meta"><span>🔒 即将开放</span></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- ===== PAGE: 艺术百科 ===== -->
+                        <section id="page-wiki" class="page">
+                            <header class="stage-bar">
+                                <button class="back-btn" data-target="page-home">←</button>
+                                <span class="stage-title">📖 艺术百科</span>
+                            </header>
+                            <div class="stage-body module-page-body">
+                                <p class="module-desc">通过艺术小知识和科普文章扩大艺术知识面</p>
+                                <div class="wiki-list">
+                                    <div class="wiki-card-lg">
+                                        <div class="wk-icon-lg">🎨</div>
+                                        <div class="wk-info-lg">
+                                            <h3>色彩的秘密</h3>
+                                            <p>为什么天空是蓝色的？为什么日落是红色的？让我们一起探索色彩背后的科学原理。</p>
+                                            <span class="wk-tag">科普</span>
+                                        </div>
+                                    </div>
+                                    <div class="wiki-card-lg">
+                                        <div class="wk-icon-lg">🖼️</div>
+                                        <div class="wk-info-lg">
+                                            <h3>大师的故事 — 毕加索</h3>
+                                            <p>毕加索的蓝色时期：一个画家如何用颜色表达自己最深的情感。</p>
+                                            <span class="wk-tag">艺术家</span>
+                                        </div>
+                                    </div>
+                                    <div class="wiki-card-lg">
+                                        <div class="wk-icon-lg">✏️</div>
+                                        <div class="wk-info-lg">
+                                            <h3>线条的魔法</h3>
+                                            <p>从简单的涂鸦到伟大的杰作，线条如何创造出令人惊叹的视觉效果。</p>
+                                            <span class="wk-tag">技法</span>
+                                        </div>
+                                    </div>
+                                    <div class="wiki-card-lg">
+                                        <div class="wk-icon-lg">🌍</div>
+                                        <div class="wk-info-lg">
+                                            <h3>世界各地的艺术</h3>
+                                            <p>从中国泼墨山水到非洲面具雕塑，了解不同文化中的艺术表达方式。</p>
+                                            <span class="wk-tag">文化</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <!-- ===== PAGE: 我的 ===== -->
+                        <section id="page-profile" class="page">
+                            <header class="stage-bar">
+                                <button class="back-btn" data-target="page-home">←</button>
+                                <span class="stage-title">👤 我的</span>
+                            </header>
+                            <div class="stage-body module-page-body">
+                                <div class="profile-header">
+                                    <div class="profile-avatar">🧒</div>
+                                    <div class="profile-info">
+                                        <h3>小小设计师</h3>
+                                        <p>已学习 2 个课程 · 创作 0 幅作品</p>
+                                    </div>
+                                </div>
+                                <div class="profile-stats">
+                                    <div class="stat-item"><span class="stat-num">2</span><span
+                                            class="stat-label">已学课程</span></div>
+                                    <div class="stat-item"><span class="stat-num">5</span><span
+                                            class="stat-label">获得徽章</span></div>
+                                    <div class="stat-item"><span class="stat-num">0</span><span
+                                            class="stat-label">创作作品</span></div>
+                                </div>
+
+                                <div class="section-tag"><span>👀</span> 创作社区</div>
+                                <div class="community-feed">
+                                    <div class="community-card">
+                                        <div class="cc-header"><span>🧒 小明</span><span class="cc-time">2小时前</span>
+                                        </div>
+                                        <div class="cc-content"
+                                            style="background:linear-gradient(135deg,#F47B7B,#F9A87C);height:80px;border-radius:12px">
+                                        </div>
+                                        <p class="cc-caption">我用红色画了一个太阳！☀️</p>
+                                    </div>
+                                    <div class="community-card">
+                                        <div class="cc-header"><span>👧 小红</span><span class="cc-time">昨天</span>
+                                        </div>
+                                        <div class="cc-content"
+                                            style="background:linear-gradient(135deg,#7DD8C2,#4F7FBF);height:80px;border-radius:12px">
+                                        </div>
+                                        <p class="cc-caption">蓝绿色的海洋世界 🌊</p>
+                                    </div>
+                                </div>
+
+                                <div class="section-tag"><span>📁</span> 作品集合</div>
+                                <div class="portfolio-empty">
+                                    <div class="empty-icon">🎨</div>
+                                    <p>还没有作品哦～</p>
+                                    <p>完成课程后你的作品会出现在这里</p>
+                                </div>
+                            </div>
+                        </section>
+
+                        <nav class="tab-bar" id="main-tab-bar">
+                            <div class="tab active" data-tab="home">
+                                <div class="tab-icon">🏠</div><label>首页</label>
+                            </div>
+                            <div class="tab" data-tab="basic">
+                                <div class="tab-icon">🎨</div><label>基础训练</label>
+                            </div>
+                            <div class="tab" data-tab="theme">
+                                <div class="tab-icon">🧩</div><label>主题训练</label>
+                            </div>
+                            <div class="tab" data-tab="wiki">
+                                <div class="tab-icon">📖</div><label>艺术百科</label>
+                            </div>
+                            <div class="tab" data-tab="profile">
+                                <div class="tab-icon">👤</div><label>我的</label>
+                            </div>
+                        </nav>
+
+                    </div><!-- /ipad-content-panel -->
+                </div><!-- /ipad-split -->
+
+            </div><!-- /ipad-screen -->
+        </div><!-- /ipad-bezel -->
+    </div><!-- /ipad-shell -->
+
+    <!-- ===== iPhone Shell (Robot Companion) ===== -->
+    <div class="iphone-shell" id="iphone-shell">
+        <!-- Slide-out toggle handle -->
+        <div class="companion-toggle" id="companion-toggle">
+            <span class="companion-toggle-icon">◀</span>
+        </div>
+        <div class="iphone-bezel">
+
+            <div class="iphone-screen">
+                <div class="iphone-robot-content">
+                    <div class="robot-avatar-area">
+                        <div class="robot-avatar-3d" id="robot-avatar">
+                            <div class="robot-body">
+                                <div class="robot-cap"></div>
+                                <div class="robot-head">
+                                    <div class="robot-face-screen">
+                                        <div class="robot-eye left" id="robot-eye-left">
+                                            <div class="eye-ring"></div>
+                                            <div class="eye-pupil"></div>
+                                        </div>
+                                        <div class="robot-eye right" id="robot-eye-right">
+                                            <div class="eye-ring"></div>
+                                            <div class="eye-pupil"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="robot-wing left-wing"></div>
+                            <div class="robot-wing right-wing"></div>
+                            <div class="robot-belly"></div>
+                        </div>
+                        <div class="robot-name">噗噗 · AI 伴学</div>
+                        <div class="robot-status-badge" id="robot-status-badge">
+                            <span class="status-led" id="status-led"></span>
+                            <span id="status-text">待机中</span>
+                        </div>
+                    </div>
+                    <div class="dialogue-area">
+                        <div class="robot-speech" id="robot-speech">
+                            <p>你好呀！我是噗噗～</p>
+                            <div class="voice-indicator silent" id="voice-indicator">
+                                <div class="voice-bar"></div>
+                                <div class="voice-bar"></div>
+                                <div class="voice-bar"></div>
+                            </div>
+                        </div>
+                        <div class="robot-log" id="robot-log">
+                            <div class="log-entry"><span class="log-time">--:--</span> <span
+                                    class="log-msg">RobotService 初始化完成</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /iphone-screen -->
+        </div><!-- /iphone-bezel -->
+    </div><!-- /iphone-shell -->
+
+    </div><!-- /devices-container -->
+
+    <canvas id="confetti-canvas"></canvas>
+    <script src="particle-splash.js"></script>
+    <script src="robot-service.js"></script>
+    <script src="shape-course.js"></script>
+    <script src="app.js"></script>
+    <!-- Register Service Worker for PWA -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./service-worker.js')
+                    .then(reg => console.log('[PWA] Service Worker registered:', reg.scope))
+                    .catch(err => console.warn('[PWA] SW registration failed:', err));
+            });
+        }
+    </script>
+</body>
+
+</html>
