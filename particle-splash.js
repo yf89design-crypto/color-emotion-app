@@ -994,12 +994,22 @@
     }
 
     // ==========================================
-    //  INIT
+    //  INIT — wait for fonts before building text particles
     // ==========================================
-    resize();
-    window.addEventListener('resize', resize);
-    clearCanvas();
-    animate();
+    function init() {
+        resize();
+        window.addEventListener('resize', resize);
+        clearCanvas();
+        animate();
+    }
+
+    // Ensure fonts are loaded before rendering text particles
+    if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(() => init());
+    } else {
+        // Fallback: delay init to give fonts time to load
+        setTimeout(init, 500);
+    }
 })();
 
 const style = document.createElement('style');
