@@ -97,8 +97,20 @@
 
     function animate() {
         MODES[currentMode].draw();
-        if (!entering || splash.style.display !== 'none') animId = requestAnimationFrame(animate);
+        animId = requestAnimationFrame(animate);
     }
+
+    // Listen for restart event (triggered by return-to-playground button)
+    document.addEventListener('splash-restart', () => {
+        exploded = false;
+        entering = false;
+        currentMode = 0;
+        if (animId) cancelAnimationFrame(animId);
+        resize();
+        animate();
+        const pgLabel = document.getElementById('playground-label');
+        if (pgLabel) pgLabel.textContent = MODES[0].name;
+    });
 
     // ==========================================
     //  MODE 1 — Particle Text
