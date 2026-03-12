@@ -56,6 +56,7 @@
 
     canvas.addEventListener('click', handleSplashClick);
     canvas.addEventListener('touchend', handleSplashClick);
+    canvas.addEventListener('touchstart', e => { e.preventDefault(); }, { passive: false });
 
     function handleSplashClick(e) {
         if (entering) return;
@@ -76,15 +77,16 @@
 
     const pgBtn = document.getElementById('playground-btn');
     const pgLabel = document.getElementById('playground-label');
+    function switchMode(e) {
+        e.stopPropagation(); e.preventDefault();
+        currentMode = (currentMode + 1) % MODES.length;
+        pgLabel.textContent = MODES[currentMode].name;
+        exploded = false; entering = false;
+        clearCanvas(); MODES[currentMode].build();
+    }
     if (pgBtn) {
-        pgBtn.addEventListener('click', e => {
-            e.stopPropagation(); e.preventDefault();
-            currentMode = (currentMode + 1) % MODES.length;
-            pgLabel.textContent = MODES[currentMode].name;
-            exploded = false; entering = false;
-            clearCanvas(); MODES[currentMode].build();
-        });
-        pgBtn.addEventListener('touchend', e => { e.stopPropagation(); e.preventDefault(); });
+        pgBtn.addEventListener('click', switchMode);
+        pgBtn.addEventListener('touchend', switchMode);
     }
 
     function animate() {
@@ -95,18 +97,24 @@
     // ==========================================
     //  MODE 1 — Particle Text
     // ==========================================
+    // System fonts that work everywhere (including TWA WebView)
+    const SAFE_FONT = '"Arial Black", "Helvetica Neue", Arial, sans-serif';
+    let fontRetryCount = 0;
+
     function buildMode1() {
         modeState.textParticles = []; modeState.bgParticles = [];
         const off = document.createElement('canvas');
         const octx = off.getContext('2d');
         off.width = W; off.height = H;
         const fontSize = Math.min(W / 8, 120) * 1.6;
-        octx.font = `300 ${fontSize}px "Outfit", sans-serif`;
+        // Use system font as primary — Outfit may not be available in TWA WebView
+        const fontStr = `900 ${fontSize}px ${SAFE_FONT}`;
+        octx.font = fontStr;
         octx.textAlign = 'center'; octx.textBaseline = 'middle'; octx.fillStyle = '#fff';
         const totalH = fontSize + fontSize * 0.85;
         const startY = (H - totalH) / 2 + fontSize / 2;
         octx.fillText('ART &', W / 2, startY);
-        octx.font = `300 ${fontSize * 0.85}px "Outfit", sans-serif`;
+        octx.font = `900 ${fontSize * 0.85}px ${SAFE_FONT}`;
         octx.fillText('Design', W / 2, startY + fontSize * 0.85);
         const data = octx.getImageData(0, 0, W, H).data;
         for (let y = 0; y < H; y += 4) {
@@ -121,6 +129,11 @@
                     });
                 }
             }
+        }
+        // Retry if no text particles found (canvas text rendering failed)
+        if (modeState.textParticles.length === 0 && fontRetryCount < 3) {
+            fontRetryCount++;
+            setTimeout(() => { if (currentMode === 0) buildMode1(); }, 1000);
         }
         const count = Math.floor((W * H) / 6000);
         for (let i = 0; i < count; i++) {
