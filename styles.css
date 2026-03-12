@@ -1657,13 +1657,177 @@ body {
     flex: 1;
 }
 
-.dash-grid {
+/* ============================================================
+   Swiss Grid Dashboard
+   ============================================================ */
+.swiss-grid {
     display: grid;
-    grid-template-columns: 28% 42% 28%;
-    gap: 12px;
-    padding: 20px;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    padding: 16px 20px;
     height: calc(100% - 80px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    align-content: start;
+}
+
+.swiss-grid::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hero stats banner — spans full width */
+.swiss-hero {
+    grid-column: 1 / -1;
+    opacity: 0;
+    animation: bentoReveal 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation-delay: calc(var(--reveal-i, 0) * 0.08s);
+}
+
+.swiss-hero-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    padding: 12px 20px;
+    background: var(--card-bg);
+    border-radius: 16px;
+    border: 1px solid var(--card-border);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+.swiss-stat {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 0;
+    cursor: default;
+}
+
+.swiss-stat-num {
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--gray-900);
+    letter-spacing: -0.5px;
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+}
+
+.swiss-stat-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--gray-500);
+    letter-spacing: 0.5px;
+}
+
+.swiss-stat-divider {
+    width: 1px;
+    height: 36px;
+    background: rgba(0, 0, 0, 0.08);
+    flex-shrink: 0;
+}
+
+/* Playground return stat — interactive */
+.swiss-playground-stat {
+    cursor: pointer;
+    border-radius: 12px;
+    padding: 6px 12px !important;
+    transition: all 0.25s ease;
+    background: linear-gradient(135deg, rgba(192, 132, 252, 0.08), rgba(103, 232, 249, 0.08));
+}
+
+.swiss-playground-stat:hover {
+    background: linear-gradient(135deg, rgba(192, 132, 252, 0.18), rgba(103, 232, 249, 0.18));
+    transform: translateY(-2px) scale(1.05);
+}
+
+.swiss-playground-stat:active {
+    transform: scale(0.95);
+}
+
+/* Swiss Card — single module */
+.swiss-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--card-bg);
+    border-radius: 16px;
+    border: 1px solid var(--card-border);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
     overflow: hidden;
+    cursor: pointer;
+    transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity: 0;
+    animation: bentoReveal 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation-delay: calc(var(--reveal-i, 0) * 0.08s);
+}
+
+.swiss-card:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+}
+
+.swiss-card:active {
+    transform: scale(0.98);
+}
+
+.swiss-card-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    margin: 14px 14px 0;
+    flex-shrink: 0;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.swiss-card-body {
+    padding: 8px 14px 10px;
+}
+
+.swiss-card-title {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--gray-900);
+    margin-bottom: 3px;
+    line-height: 1.2;
+}
+
+.swiss-card-desc {
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--gray-500);
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.swiss-card-content {
+    border-radius: 12px;
+    padding: 8px;
+    margin: 0 8px 8px;
+    color: #222;
+}
+
+/* Dark mode swiss grid */
+[data-theme="dark"] .swiss-hero-inner {
+    background: var(--card-bg);
+    border-color: var(--card-border);
+}
+
+[data-theme="dark"] .swiss-card {
+    background: var(--card-bg);
+    border-color: var(--card-border);
+}
+
+[data-theme="dark"] .swiss-stat-divider {
+    background: rgba(255, 255, 255, 0.08);
 }
 
 /* Stats Counter Bar */
@@ -4036,7 +4200,8 @@ body {
    Standalone PWA / TWA (installed app) — Full Screen
    Samsung Tab S9: 2560x1600, or any standalone context
    ============================================================ */
-@media (display-mode: standalone), (display-mode: fullscreen) {
+@media (display-mode: standalone),
+(display-mode: fullscreen) {
     body {
         padding: 0;
         margin: 0;
