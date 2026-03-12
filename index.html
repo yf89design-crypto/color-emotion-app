@@ -18,7 +18,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="彩绘心灵">
-    <link rel="apple-touch-icon" href="icons/icon-192x192.png">
+    <link rel="apple-touch-icon" href="icon-192x192.png">
 </head>
 
 <body>
@@ -104,125 +104,157 @@
                                     <a class="dash-nav-item" data-tab="profile">我的 👤</a>
                                 </nav>
 
-                                <!-- Grid Dashboard -->
-                                <div class="dash-grid">
+                                <!-- Swiss Grid Dashboard -->
+                                <div class="dash-grid swiss-grid">
 
-                                    <div class="dash-col dash-col-left">
-                                        <!-- Stats Counter Bar -->
-                                        <div class="dash-stats-bar" id="dash-stats-bar">
-                                            <div class="dash-stat">
-                                                <span class="dash-stat-number" data-target="2" data-suffix="h">0</span>
-                                                <span class="dash-stat-label">🕐</span>
+                                    <!-- Row 1: Hero Stats Banner -->
+                                    <div class="swiss-hero" style="--reveal-i:0">
+                                        <div class="swiss-hero-inner">
+                                            <div class="swiss-stat">
+                                                <span class="swiss-stat-num" data-target="2" data-suffix="h">0</span>
+                                                <span class="swiss-stat-label">学习时长</span>
                                             </div>
-                                            <div class="dash-stat">
-                                                <span class="dash-stat-number" data-target="15" data-suffix="%">0</span>
-                                                <span class="dash-stat-label">📊</span>
+                                            <div class="swiss-stat-divider"></div>
+                                            <div class="swiss-stat">
+                                                <span class="swiss-stat-num" data-target="15" data-suffix="%">0</span>
+                                                <span class="swiss-stat-label">课程进度</span>
                                             </div>
-                                            <div class="dash-stat">
-                                                <span class="dash-stat-number" data-target="5" data-suffix="">0</span>
-                                                <span class="dash-stat-label">🏅</span>
+                                            <div class="swiss-stat-divider"></div>
+                                            <div class="swiss-stat">
+                                                <span class="swiss-stat-num" data-target="5" data-suffix="">0</span>
+                                                <span class="swiss-stat-label">获得徽章</span>
                                             </div>
-                                        </div>
-
-                                        <div class="dash-block" data-tab="wiki">
-                                            <div class="dash-block-title">📖 艺术小百科</div>
-                                            <div class="dash-block-content" style="background:#8ed500">
-                                                <div class="dash-list-item">
-                                                    <div class="dli-thumb"
-                                                        style="background:linear-gradient(135deg,#F47B7B,#F9A87C)">
-                                                    </div>
-                                                    <div class="dli-info"><span>色彩的秘密</span></div>
-                                                    <span class="dli-play">▶</span>
-                                                </div>
-                                                <div class="dash-list-item">
-                                                    <div class="dli-thumb"
-                                                        style="background:linear-gradient(135deg,#7DD8C2,#7BBDE8)">
-                                                    </div>
-                                                    <div class="dli-info"><span>大师的故事</span></div>
-                                                    <span class="dli-play">▶</span>
-                                                </div>
-                                                <div class="dash-list-item">
-                                                    <div class="dli-thumb"
-                                                        style="background:linear-gradient(135deg,#B8A0E8,#F78CA8)">
-                                                    </div>
-                                                    <div class="dli-info"><span>线条的魔法</span></div>
-                                                    <span class="dli-play">▶</span>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div style="flex:1"></div>
-
-                                        <!-- 创作社区 -->
-                                        <div class="dash-block" data-tab="community">
-                                            <div class="dash-block-title">💬 创作社区</div>
-                                            <div class="dash-block-content" style="background:#FF8A65">
-                                                <div class="dash-community-actions">
-                                                    <div class="dca-btn"><span>📤</span><label>创作</label></div>
-                                                    <div class="dca-btn"><span>❤️</span><label>关注</label></div>
-                                                    <div class="dca-btn dca-badge"><span>💬</span><label>消息</label>
-                                                    </div>
-                                                </div>
+                                            <div class="swiss-stat-divider"></div>
+                                            <div class="swiss-stat swiss-playground-stat" id="return-to-splash">
+                                                <span class="swiss-stat-num">🎨</span>
+                                                <span class="swiss-stat-label">互动特效</span>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <!-- Center Column: 思维大训练 -->
-                                    <div class="dash-col dash-col-center">
-                                        <div class="dash-block-title">🧠 思维大训练</div>
-
-                                        <div class="dash-block" id="dash-basic" data-tab="basic">
-                                            <div class="dash-block-title">🌟 基础训练</div>
-                                            <div class="dash-block-content" style="background:#e8d5b0">
-                                                <h3 style="font-size:18px;font-weight:900;color:#222;margin-bottom:4px">
-                                                    基础训练</h3>
-                                                <p style="font-size:11px;color:#444">培养感性感知和理性思维</p>
-                                            </div>
+                                    <!-- Module 1: 艺术小百科 -->
+                                    <div class="swiss-card" data-tab="wiki" style="--reveal-i:1">
+                                        <div class="swiss-card-icon"
+                                            style="background:linear-gradient(135deg,#8ed500,#6db800)">📖</div>
+                                        <div class="swiss-card-body">
+                                            <h3 class="swiss-card-title">艺术小百科</h3>
+                                            <p class="swiss-card-desc">探索色彩的秘密、大师的故事和线条的魔法，开启你的艺术之旅</p>
                                         </div>
-
-                                        <div class="dash-block" id="dash-theme" data-tab="theme">
-                                            <div class="dash-block-title">🎭 主题训练</div>
-                                            <div class="dash-block-content" style="background:#a8d8a0">
-                                                <h3 style="font-size:18px;font-weight:900;color:#222;margin-bottom:4px">
-                                                    主题训练</h3>
-                                                <p style="font-size:11px;color:#444">综合解决问题能力</p>
+                                        <div class="swiss-card-content" style="background:#8ed500">
+                                            <div class="dash-list-item">
+                                                <div class="dli-thumb"
+                                                    style="background:linear-gradient(135deg,#F47B7B,#F9A87C)"></div>
+                                                <div class="dli-info"><span>色彩的秘密</span></div>
+                                                <span class="dli-play">▶</span>
                                             </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- Right Column: 小小作品集 -->
-                                    <div class="dash-col dash-col-right">
-                                        <div class="dash-block" data-tab="portfolio">
-                                            <div class="dash-block-title">📁 小小作品集</div>
-                                            <div class="dash-block-content" style="background:#B39DDB">
-                                                <div class="dash-portfolio-item">
-                                                    <div class="dpi-card"
-                                                        style="background:linear-gradient(135deg,#F9A87C,#F47B7B)">
-                                                    </div>
-                                                    <p class="dpi-label">"给妈妈的礼物"<br><small>2025.12.9</small></p>
-                                                </div>
-                                                <div class="dash-portfolio-item">
-                                                    <div class="dpi-card"
-                                                        style="background:linear-gradient(135deg,#7BBDE8,#4F7FBF)">
-                                                    </div>
-                                                    <p class="dpi-label">"色彩的翅膀"<br><small>2025.12.1</small></p>
-                                                </div>
-                                                <div class="dash-portfolio-item">
-                                                    <div class="dpi-card"
-                                                        style="background:linear-gradient(135deg,#8DD88C,#43A047)">
-                                                    </div>
-                                                    <p class="dpi-label">"石头色的猫"<br><small>2025.11.25</small></p>
-                                                </div>
-                                                <div class="dash-dots">
-                                                    <span class="dot active"></span>
-                                                    <span class="dot"></span>
-                                                    <span class="dot"></span>
-                                                </div>
+                                            <div class="dash-list-item">
+                                                <div class="dli-thumb"
+                                                    style="background:linear-gradient(135deg,#7DD8C2,#7BBDE8)"></div>
+                                                <div class="dli-info"><span>大师的故事</span></div>
+                                                <span class="dli-play">▶</span>
+                                            </div>
+                                            <div class="dash-list-item">
+                                                <div class="dli-thumb"
+                                                    style="background:linear-gradient(135deg,#B8A0E8,#F78CA8)"></div>
+                                                <div class="dli-info"><span>线条的魔法</span></div>
+                                                <span class="dli-play">▶</span>
                                             </div>
                                         </div>
                                     </div>
 
-                                </div><!-- /dash-grid -->
+                                    <!-- Module 2: 基础训练 -->
+                                    <div class="swiss-card" id="dash-basic" data-tab="basic" style="--reveal-i:2">
+                                        <div class="swiss-card-icon"
+                                            style="background:linear-gradient(135deg,#e8d5b0,#c9b896)">🌟</div>
+                                        <div class="swiss-card-body">
+                                            <h3 class="swiss-card-title">基础训练</h3>
+                                            <p class="swiss-card-desc">培养感性感知和理性思维，从色彩与情绪的关系开始</p>
+                                        </div>
+                                        <div class="swiss-card-content" style="background:#e8d5b0">
+                                            <h3 style="font-size:16px;font-weight:900;color:#222;margin-bottom:2px">基础训练
+                                            </h3>
+                                            <p style="font-size:11px;color:#444">培养感性感知和理性思维</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Module 3: 主题训练 -->
+                                    <div class="swiss-card" id="dash-theme" data-tab="theme" style="--reveal-i:3">
+                                        <div class="swiss-card-icon"
+                                            style="background:linear-gradient(135deg,#a8d8a0,#7ab872)">🎭</div>
+                                        <div class="swiss-card-body">
+                                            <h3 class="swiss-card-title">主题训练</h3>
+                                            <p class="swiss-card-desc">综合解决问题能力，通过设计思维挑战激发创造力</p>
+                                        </div>
+                                        <div class="swiss-card-content" style="background:#a8d8a0">
+                                            <h3 style="font-size:16px;font-weight:900;color:#222;margin-bottom:2px">主题训练
+                                            </h3>
+                                            <p style="font-size:11px;color:#444">综合解决问题能力</p>
+                                        </div>
+                                    </div>
+
+                                    <!-- Module 4: 小小作品集 -->
+                                    <div class="swiss-card" data-tab="portfolio" style="--reveal-i:4">
+                                        <div class="swiss-card-icon"
+                                            style="background:linear-gradient(135deg,#B39DDB,#9575CD)">📁</div>
+                                        <div class="swiss-card-body">
+                                            <h3 class="swiss-card-title">小小作品集</h3>
+                                            <p class="swiss-card-desc">展示你的创作成果，记录每一次灵感迸发的美丽瞬间</p>
+                                        </div>
+                                        <div class="swiss-card-content" style="background:#B39DDB">
+                                            <div class="dash-portfolio-item">
+                                                <div class="dpi-card"
+                                                    style="background:linear-gradient(135deg,#F9A87C,#F47B7B)"></div>
+                                                <p class="dpi-label">"给妈妈的礼物"<br><small>2025.12.9</small></p>
+                                            </div>
+                                            <div class="dash-portfolio-item">
+                                                <div class="dpi-card"
+                                                    style="background:linear-gradient(135deg,#7BBDE8,#4F7FBF)"></div>
+                                                <p class="dpi-label">"色彩的翅膀"<br><small>2025.12.1</small></p>
+                                            </div>
+                                            <div class="dash-portfolio-item">
+                                                <div class="dpi-card"
+                                                    style="background:linear-gradient(135deg,#8DD88C,#43A047)"></div>
+                                                <p class="dpi-label">"石头色的猫"<br><small>2025.11.25</small></p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Module 5: 创作社区 -->
+                                    <div class="swiss-card" data-tab="community" style="--reveal-i:5">
+                                        <div class="swiss-card-icon"
+                                            style="background:linear-gradient(135deg,#FF8A65,#E64A19)">💬</div>
+                                        <div class="swiss-card-body">
+                                            <h3 class="swiss-card-title">创作社区</h3>
+                                            <p class="swiss-card-desc">和小伙伴们分享作品，互相点赞评论，一起成长</p>
+                                        </div>
+                                        <div class="swiss-card-content" style="background:#FF8A65">
+                                            <div class="dash-community-actions">
+                                                <div class="dca-btn"><span>📤</span><label>创作</label></div>
+                                                <div class="dca-btn"><span>❤️</span><label>关注</label></div>
+                                                <div class="dca-btn dca-badge"><span>💬</span><label>消息</label></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Module 6: 每日灵感 (NEW) -->
+                                    <div class="swiss-card" style="--reveal-i:6">
+                                        <div class="swiss-card-icon"
+                                            style="background:linear-gradient(135deg,#67E8F9,#06B6D4)">✨</div>
+                                        <div class="swiss-card-body">
+                                            <h3 class="swiss-card-title">每日灵感</h3>
+                                            <p class="swiss-card-desc">每天一个艺术灵感，激发你无限的想象力和创造力</p>
+                                        </div>
+                                        <div class="swiss-card-content"
+                                            style="background:linear-gradient(135deg,#67E8F9,#06B6D4)">
+                                            <div style="text-align:center;padding:8px 0">
+                                                <p style="font-size:22px;margin-bottom:4px">🎨</p>
+                                                <p style="font-size:12px;font-weight:700;color:#fff">"色彩是灵魂的语言"</p>
+                                                <p style="font-size:10px;color:rgba(255,255,255,0.8)">— 康定斯基</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div><!-- /swiss-grid -->
 
                         </div>
 
